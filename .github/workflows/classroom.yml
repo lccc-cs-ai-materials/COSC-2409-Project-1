@@ -24,26 +24,74 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Test Runner & Dependencies
+      - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           pip install pytest
 
-      # Test Step 1: Run the student's written unit tests
-      - name: Run Student Test Suite
-        id: student-tests
+      - name: Test Greeting
+        id: test-greeting
         uses: education/autograding-command-grader@v1
         with:
-          test-name: Student Unit Tests Execution
-          setup-command: ''
-          command: 'pytest -v'
+          test-name: Generate Greeting
+          command: 'pytest -v -k test_generate_greeting'
           timeout: 1
-          max-score: 50
+          max-score: 8
+
+      - name: Test Calculate Average
+        id: test-average
+        uses: education/autograding-command-grader@v1
+        with:
+          test-name: Calculate Average
+          command: 'pytest -v -k test_calculate_average'
+          timeout: 1
+          max-score: 8
+
+      - name: Test Categorize Numbers
+        id: test-categorize
+        uses: education/autograding-command-grader@v1
+        with:
+          test-name: Categorize Numbers
+          command: 'pytest -v -k test_categorize_numbers'
+          timeout: 1
+          max-score: 8
+
+      - name: Test Count Word Frequency
+        id: test-word-freq
+        uses: education/autograding-command-grader@v1
+        with:
+          test-name: Count Word Frequency
+          command: 'pytest -v -k test_count_word_frequency'
+          timeout: 1
+          max-score: 8
+
+      - name: Test Find Max in Dict
+        id: test-max-dict
+        uses: education/autograding-command-grader@v1
+        with:
+          test-name: Find Max in Dict
+          command: 'pytest -v -k test_find_max_in_dict'
+          timeout: 1
+          max-score: 9
+
+      - name: Test FizzBuzz
+        id: test-fizzbuzz
+        uses: education/autograding-command-grader@v1
+        with:
+          test-name: FizzBuzz
+          command: 'pytest -v -k test_fizzbuzz'
+          timeout: 1
+          max-score: 9
 
       - name: Autograding Summary Reporter
         uses: education/autograding-grading-reporter@v1
         env:
-          STUDENT-TESTS_RESULTS: "${{steps.student-tests.outputs.result}}"
+          TEST-GREETING_RESULTS: "${{steps.test-greeting.outputs.result}}"
+          TEST-AVERAGE_RESULTS: "${{steps.test-average.outputs.result}}"
+          TEST-CATEGORIZE_RESULTS: "${{steps.test-categorize.outputs.result}}"
+          TEST-WORD-FREQ_RESULTS: "${{steps.test-word-freq.outputs.result}}"
+          TEST-MAX-DICT_RESULTS: "${{steps.test-max-dict.outputs.result}}"
+          TEST-FIZZBUZZ_RESULTS: "${{steps.test-fizzbuzz.outputs.result}}"
         with:
-          runners: student-tests
+          runners: test-greeting,test-average,test-categorize,test-word-freq,test-max-dict,test-fizzbuzz
